@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../store/cartSlice';
+import { useToast } from '../App';
 
 export default function ProductDetail() {
   const { productId } = useParams();
   const dispatch = useDispatch();
+  const { showToast } = useToast();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -46,6 +48,13 @@ export default function ProductDetail() {
       isMounted = false;
     };
   }, [productId]);
+
+  // >>> define the handler here <<<
+  const handleAddToCart = () => {
+    if (!product) return;
+    dispatch(addToCart(product));
+    showToast('Added to cart');
+  };
 
   if (loading) {
     return (
