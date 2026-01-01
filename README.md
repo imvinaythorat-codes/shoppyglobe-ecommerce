@@ -156,7 +156,7 @@ src/
 1. Install dependencies:
 npm install
 
-2. npm run dev
+2. npm run dev.
 
 3. Open the URL printed in the terminal (usually http://localhost:5173).
 
