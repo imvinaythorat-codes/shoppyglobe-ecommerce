@@ -15,18 +15,6 @@ export default function NotFound() {
           Status: {status} – {message}
         </p>
 
-        {/* DEBUG: show the raw error so we can understand the 404 on details */}
-        <pre
-          style={{
-            textAlign: 'left',
-            whiteSpace: 'pre-wrap',
-            fontSize: '0.75rem',
-            marginTop: '8px',
-          }}
-        >
-          {JSON.stringify(error, null, 2)}
-        </pre>
-
         <p className="muted-text">
           You can go back to the home page and continue shopping.
         </p>
