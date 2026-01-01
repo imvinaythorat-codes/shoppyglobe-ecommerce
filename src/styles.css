@@ -678,28 +678,14 @@ body {
   }
 }
 
-/* Product grid: fewer columns on narrow screens */
 @media (max-width: 900px) {
   .product-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 }
 
-/* Stack detail and checkout layouts vertically on small screens */
-@media (max-width: 800px) {
-  .detail-layout,
-  .checkout-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .detail-image-wrap {
-    max-width: 420px;
-    margin: 0 auto;
-  }
-
-  .cart-summary {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+@media (max-width: 640px) {
+  .app-main {
+    padding-inline: 12px;
   }
 }
