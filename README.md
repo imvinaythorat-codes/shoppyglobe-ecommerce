@@ -1,104 +1,168 @@
-# Online Library System – Internshala Assignment
+# ShoppyGlobe E‑commerce Application
 
-This project is a small online library system built with React and Vite.
-It was created as part of the React Assignment 2 to practise routing, Redux, and UI design.
+This project is a basic e‑commerce application built with React and Vite.
+It demonstrates routing, Redux based state management, API data fetching, and a custom UI.
 
-## Tech stack
+---
+
+## Tech Stack
 
 - React (Vite)
-- React Router DOM
+- React Router DOM (`createBrowserRouter`)
 - Redux Toolkit + React Redux
-- CSS (custom styling, no UI framework)
+- CSS (no UI framework)
+- DummyJSON products API – `https://dummyjson.com/products`
 
-## Features
+---
 
-- **Home page**
-  - Welcome text that explains the app.
-  - List of book categories as clickable pills.
-  - Section of popular books shown as cards with cover image, rating, and "View Details" link.
+## Features (mapped to assignment)
 
-- **Browse books**
-  - Shows the complete book list coming from Redux state.
-  - Dynamic routing by category: `/books/:category`.
-  - Search bar that filters books by title or author.
-  - Each book is displayed as a card with cover, rating and "View Details" button.
+### Component structure
 
-- **Book details**
-  - Dynamic route `/book/:bookId`.
-  - Large hero-style book cover at the top of the page.
-  - Shows title, author, category, rating, description, and published year (if available).
-  - Back button to go to the previous page and a link to return to the Browse page.
+- **App** – root layout, wraps header, routes and global toast provider.
+- **Header** – navigation bar with app name and shopping cart icon showing cart count.
+- **ProductList** – fetches and renders the grid of products.
+- **ProductItem** – single product card with image, rating, price, and "ADD" button.
+- **ProductDetail** – detailed view of one product, based on dynamic route parameter.
+- **Cart** – lists all cart items with quantity controls and total price.
+- **CartItem** – one item row in the cart.
+- **Checkout** – dummy checkout form with user details and order summary.
+- **NotFound** – 404 / error page for unknown routes or route errors.
+- **Toast** – bottom popup used to show "Added to cart" feedback.
+- **OffersTicker** – animated bar showing rotating offer messages.
 
-- **Add book**
-  - Form for adding a new book into the list that is stored in Redux.
-  - Validation for required fields and rating range (1.0 – 5.0).
-  - After a successful submit, the user is redirected to the Browse page and the new book appears at the top.
+All components are functional components using hooks.
 
-- **404 page**
-  - Handles all invalid routes.
-  - Displays the invalid URL on the screen.
-  - Does not render the shared header component.
-  - Contains a button to return to the Home page.
+### Props
 
-- **Styling and UX**
-  - Dark library theme with a consistent colour palette.
-  - Smooth hover states on cards and buttons.
-  - Responsive layout that works on large and small screens.
-  - Book cover images for all initial books.
+- Data and handler functions are passed from parent to child components:
+  - `ProductList` → `ProductItem` (`product`, `onAddToCart`).
+  - `Cart` → `CartItem` (`item`, `onIncrease`, `onDecrease`, `onRemove`).
+- Components keep their UI generic and read everything from props, which satisfies the props usage requirement.
 
-## Pages and routes
+### Data fetching with `useEffect`
 
-- `/` – Home page
-- `/books` – Browse books (all categories)
-- `/books/:category` – Browse books filtered by category
-- `/book/:bookId` – Book details page
-- `/add-book` – Add book form
-- `*` – 404 "Page Not Found" page
+- **ProductList** uses a `useProducts` hook:
+  - Performs a GET request to `https://dummyjson.com/products` inside `useEffect`.
+  - Stores `products`, `loading`, and `error` in local hook state.
+  - Returns these values so `ProductList` can render loading/error/content states.
+- **ProductDetail**:
+  - Uses `useParams` to read `productId` from the URL (`/products/:productId`).
+  - Uses `useEffect` to fetch `https://dummyjson.com/products/:productId`.
+  - Stores the product, loading flag, and any fetch error in component state.
 
-## State management
+### Error Handling
 
-The application uses Redux Toolkit:
+- Both `ProductList` and `ProductDetail` catch fetch errors and show a human‑readable message.
+- `NotFound` uses `useRouteError` to display status and message from router errors.
 
-- `src/store/booksSlice.js` contains the list of books and the `addBook` reducer.
-- The store is created in `src/store/store.js`.
-- `Provider` is configured in `src/main.jsx`.
+### State Management (Redux)
 
-Selectors:
+- **Store**:
+  - Configured with `cart` and `products` slices via Redux Toolkit `configureStore`.
+- **cartSlice**:
+  - Manages an array of cart items (`id`, `title`, `price`, `thumbnail`, `quantity`).
+  - Actions/reducers:
+    - `addToCart`
+    - `removeFromCart`
+    - `increaseQuantity`
+    - `decreaseQuantity` (never drops below 1)
+    - `clearCart`
+  - Selectors:
+    - `selectCartItems`
+    - `selectCartCount`
+    - `selectCartTotal`
+- **productsSlice**:
+  - Stores a `searchTerm` for filtering products.
+  - Action: `setSearchTerm`.
+  - Selector: `selectSearchTerm`.
 
-- `selectAllBooks` – returns the full list.
-- `selectBookById` – returns a single book by id.
-- `selectCategories` – returns the unique set of categories.
+### Event Handling
 
-## How to run locally
+- `ProductItem`:
+  - Handles click on "ADD" button:
+    - Dispatches `addToCart`.
+    - Triggers a toast message.
+- `ProductDetail`:
+  - "Add to Cart" button does the same from the detail page.
+- `CartItem`:
+  - `+` and `-` buttons call increase/decrease handlers for that item.
+  - "Remove" button dispatches `removeFromCart`.
+  - `decreaseQuantity` is clamped so quantity never goes below 1.
+- Checkout form:
+  - On submit, validates simple required fields.
+  - If valid, clears the cart, shows a success message and redirects back to Home after a short delay.
+
+### React Router (data router)
+
+- Uses `createBrowserRouter` and `RouterProvider`.
+- Routes (all nested under `App`):
+
+  - `/` – Product list (home).
+  - `/products` – Product list (same view).
+  - `/products/:productId` – Product detail (dynamic segment).
+  - `/cart` – Cart page.
+  - `/checkout` – Checkout page.
+  - `NotFound` is provided as the `errorElement` so invalid URLs and route errors show a 404‑style page with details.
+
+### React Lists
+
+- Products are rendered as a grid using `.map()` over the products array with `product.id` as key.
+- Cart items and checkout summary items are also rendered via `.map()` with proper keys.
+
+### Performance Optimisation
+
+- Route components are code‑split using `React.lazy` and `Suspense`:
+  - `ProductList`, `ProductDetail`, `Cart`, `Checkout`, and `NotFound` are all lazily loaded.
+- Images (product thumbnails and cart images) use `loading="lazy"` where appropriate.
+
+### Styling and UX
+
+- Custom CSS with:
+  - Full‑width header bar, offer ticker, and content area.
+  - Product cards with image, rating, price, and discount styling.
+  - Responsive grid (adjusts columns with viewport width).
+  - Styled cart rows and checkout form.
+  - Smooth hover states for buttons and cards.
+- The layout is responsive down to mobile widths using media queries.
+
+---
+
+## Project Structure (short overview)
+
+```text
+src/
+  components/
+    Header.jsx
+    OffersTicker.jsx
+    ProductList.jsx
+    ProductItem.jsx
+    ProductDetail.jsx
+    Cart.jsx
+    CartItem.jsx
+    Checkout.jsx
+    NotFound.jsx
+    Toast.jsx
+  store/
+    cartSlice.js
+    productsSlice.js
+    store.js
+  hooks/
+    useProducts.js
+  App.jsx
+  main.jsx
+  styles.css
 
 1. Install dependencies:
+npm install
 
-   ```bash
-   npm install
-npm run dev
+2. npm run dev
 
-2. The terminal will show a local URL (for example http://localhost:5173). Open that URL in the browser.
+3. Open the URL printed in the terminal (usually http://localhost:5173).
 
-Netlify Live Link :
+Netlify Link :
 
 
 GitHub Link :
 https://github.com/imvinaythorat-codes/shoppyglobe-ecommerce.git
 
-3. Project Structure :
-•  src/store/
-◦  store.js
-◦  cartSlice.js
-◦  productsSlice.js
-•  src/components/
-◦  Header.jsx
-◦  ProductList.jsx
-◦  ProductItem.jsx
-◦  ProductDetail.jsx
-◦  Cart.jsx
-◦  CartItem.jsx
-◦  Checkout.jsx
-◦  NotFound.jsx
-◦  FullPageSpinner.jsx
-•  src/hooks/
-◦  useProducts.js
