@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-// Reusable hook for fetching the list of products.
+// Small custom hook used by ProductList to fetch all products from the API.
 export function useProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
