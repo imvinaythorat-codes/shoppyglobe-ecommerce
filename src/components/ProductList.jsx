@@ -8,6 +8,7 @@ import {
 } from '../store/productsSlice';
 import ProductItem from './ProductItem';
 
+// Fetches products from the API and renders them as a responsive grid.
 export default function ProductList() {
   const dispatch = useDispatch();
   const searchTerm = useSelector(selectSearchTerm);

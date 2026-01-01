@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectCartCount } from '../store/cartSlice';
-
+// Top navigation bar with app name and cart count.
 export default function Header() {
   const cartCount = useSelector(selectCartCount);
   const navigate = useNavigate();

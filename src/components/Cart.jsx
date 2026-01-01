@@ -10,6 +10,7 @@ import {
 import CartItem from './CartItem';
 import { Link } from 'react-router-dom';
 
+// Shows all items currently in the cart along with the running total.
 export default function Cart() {
   const dispatch = useDispatch();
   const items = useSelector(selectCartItems);
