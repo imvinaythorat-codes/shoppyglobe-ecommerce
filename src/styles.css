@@ -50,10 +50,17 @@ body {
 }
 
 .header {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 10px 22px;
-  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(18px);
+  background: linear-gradient(
+    to right,
+    rgba(15, 23, 42, 0.96),
+    rgba(3, 7, 18, 0.96)
+  );
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.85);
 }
 
 .header-left {
@@ -136,6 +143,8 @@ body {
 
 /* Offers ticker */
 
+/* Offers ticker */
+
 .ticker {
   width: 100%;
   border-bottom: 1px solid rgba(148, 163, 184, 0.24);
@@ -144,12 +153,13 @@ body {
     rgba(37, 99, 235, 0.35),
     rgba(88, 28, 135, 0.35)
   );
+  overflow: hidden;
 }
 
 .ticker-track {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 6px 22px;
+  padding: 8px 22px;
   display: flex;
   gap: 40px;
   white-space: nowrap;
@@ -157,8 +167,11 @@ body {
 }
 
 .ticker-item {
-  font-size: 0.82rem;
+  font-size: 0.86rem;
   color: #e5e7eb;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 @keyframes ticker-move {
@@ -553,14 +566,22 @@ body {
 
 /* Responsive tweaks */
 
-@media (max-width: 800px) {
-  .detail-layout,
-  .checkout-layout {
-    grid-template-columns: minmax(0, 1fr);
+@media (max-width: 768px) {
+  .header {
+    padding-inline: 14px;
   }
 
-  .header {
-    padding-inline: 12px;
+  .header-nav {
+    gap: 10px;
+  }
+
+  .nav-link {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+
+  .cart-icon {
+    padding-inline: 10px;
   }
 
   .app-main {
