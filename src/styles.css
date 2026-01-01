@@ -621,3 +621,19 @@ body {
     transform: translate(-50%, 0);
   }
 }
+
+/* Mobile tweak */
+@media (max-width: 640px) {
+  .header {
+    padding-inline: 16px;
+  }
+
+  .header-nav {
+    gap: 10px;
+  }
+
+  .nav-link {
+    padding-inline: 10px;
+    font-size: 0.85rem;
+  }
+}
