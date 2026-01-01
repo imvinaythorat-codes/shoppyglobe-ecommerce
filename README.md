@@ -161,7 +161,7 @@ npm install
 3. Open the URL printed in the terminal (usually http://localhost:5173).
 
 Netlify Link :
-
+https://shoppyglobe-ecommerce-web.netlify.app/
 
 GitHub Link :
 https://github.com/imvinaythorat-codes/shoppyglobe-ecommerce.git
